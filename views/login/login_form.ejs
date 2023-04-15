@@ -1,0 +1,45 @@
+<form action="abc.jsp" method="post" class="loginForm">
+    <h2>로그인</h2>
+    <div class="Form">
+      <table>
+        <tr>
+          <td class="alert">
+            아이디
+          </td>
+          <td>
+            <input type="text" class="id" name="userID" placeholder="아이디">
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="Form">
+      <table>
+        <tr>
+          <td class="alert">
+            비밀번호
+          </td>
+          <td>
+            <input type="password" class="id" name="userPassword1" placeholder="비밀번호">
+          </td>
+        </tr>
+      </table>
+    </div>
+    <input type="submit" class="btn" value="로그인" >
+    <div class="bottomText1">
+      <input class="signup" type="button" value="ID/PWD찾기" onclick="location.href='findidpassword';">
+    </div>
+    <div class="bottomText2">
+      <table>
+        <tr>
+          <td class="signup_button_td1">
+            아직 회원이 아니신가요?
+          </td>
+        </tr>
+        <tr>
+          <td class="signup_button_td2">
+            <input class="signup" type="button" value="회원가입" onclick="location.href='signup';">
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
