@@ -21,6 +21,27 @@ app.get("/login", homeController.resLogin);
 app.get("/signup", homeController.resSignup);
 app.get("/findidpassword", homeController.resFindIdPassword);
 
+app.get("/pc", homeController.resPc);
+app.get("/pc/LOZBOTW", homeController.resPcLOZBOTW);
+app.get("/pc/LOZSS", homeController.resPcLOZSS);
+app.get("/pc/supermario", homeController.resPcSupermario);
+
+app.get("/ps", homeController.resPs);
+app.get("/ps/LOZBOTW", homeController.resPsLOZBOTW);
+app.get("/ps/LOZSS", homeController.resPsLOZSS);
+app.get("/ps/supermario", homeController.resPsSupermario);
+
+app.get("/xbox", homeController.resXbox);
+app.get("/xbox/LOZBOTW", homeController.resXboxLOZBOTW);
+app.get("/xbox/LOZSS", homeController.resXboxLOZSS);
+app.get("/xbox/supermario", homeController.resXboxSupermario);
+
+app.get("/nintendo", homeController.resNintendo);
+app.get("/nintendo/LOZBOTW", homeController.resNintendoLOZBOTW);
+app.get("/nintendo/LOZSS", homeController.resNintendoLOZSS);
+app.get("/nintendo/supermario", homeController.resNintendoSupermario);
+
+
 // 추가 에러처리
 app.use(errorController.logErrors);
 app.use(errorController.resNotFound);
