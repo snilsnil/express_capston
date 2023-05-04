@@ -49,5 +49,5 @@ app.use(errorController.resInternalError);
 
 // #5 listen
 app.listen(port,()=>{
-    console.log(port);
+    console.log(`This is ${port} port`);
 });
