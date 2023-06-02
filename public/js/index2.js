@@ -11,22 +11,24 @@
 //         $(".a"+a)[0].currentTime=0;
 //     });
 // });
-
-$(document).ready(function(){
-    var playPromise;
-    $('.image').hover(function(){
-        var a=$(this).attr("id");
-        $(".a"+a).fadeIn();
-        playPromise = $(".a"+a)[0].play();
-    }, function(){
-        var a=$(this).attr("id");
-        $(".a"+a).hide();
-        if (playPromise !== undefined) {
-            playPromise.then(function() {
-                $(".a"+a)[0].pause();
-                $(".a"+a)[0].currentTime=0;
-                $(".a"+a)[0].load();
-            });
-        }
+var deviceWidth = window.innerWidth;
+if (deviceWidth > 1023) {
+    $(document).ready(function () {
+        var playPromise;
+        $('.image').hover(function () {
+            var a = $(this).attr("id");
+            $(".a" + a).fadeIn();
+            playPromise = $(".a" + a)[0].play();
+        }, function () {
+            var a = $(this).attr("id");
+            $(".a" + a).hide();
+            if (playPromise !== undefined) {
+                playPromise.then(function () {
+                    $(".a" + a)[0].pause();
+                    $(".a" + a)[0].currentTime = 0;
+                    $(".a" + a)[0].load();
+                });
+            }
+        });
     });
-});
+}
