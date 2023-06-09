@@ -17,40 +17,9 @@ const User = require("../models/User"),
   }; // 사용자 모델 요청
 
 module.exports = {
-  index: (req, res, next) => {
-    User.find() // index 액션에서만 퀴리 실행
-      .then((users) => {
-        // 사용자 배열로 index 페이지 렌더링
-        res.locals.users = users; // 응답상에서 사용자 데이터를 저장하고 다음 미들웨어 함수 호출
-        next();
-      })
-      .catch((error) => {
-        // 로그 메시지를 출력하고 홈페이지로 리디렉션
-        console.log(`Error fetching users: ${error.message}`);
-        next(error); // 에러를 캐치하고 다음 미들웨어로 전달
-      });
-  },
-  indexView: (req, res) => {
-    res.render("users/index", {
-      page: "users",
-      title: "All Users",
-    }); // 분리된 액션으로 뷰 렌더링
-  },
 
-  /**
-   * 노트: 구독자 컨트롤러에서 index 액션이 getAllSubscribers를 대체한다. main.js에서 액션 관련
-   * 라우트 index를 가리키도록 수정하고 subscribers.ejs를 index.ejs로 변경된 점을 기억하자. 이
-   * 뷰는 views 폴더 아래 subscribers 폴더에 있어야 한다.
-   */
-
-  /**
-   * Listing 19.2 (p. 278)
-   * userController.js에 액션 생성 추가
-   */
-  // 폼의 렌더링을 위한 새로운 액션 추가
-
-  // 사용자를 데이터베이스에 저장하기 위한 create 액션 추가
   findid: (req, res, next) => {
+    const previousPath = req.body.previousPath;
     let email = req.body.email;
     let userParams = getUserParams(req.body);
     // 폼 파라미터로 사용자 조회
@@ -65,21 +34,24 @@ module.exports = {
         return res.send(`
           <script>
               alert("이메일을 입력하세요");
-              window.location.href="/findidpassword";
+              window.history.back();
           </script>`);
       } else {
         User.findOne({ email: email })
           .then((user) => {
             if (user) {
-              console.log(user.email);
-              console.log(user.id);
               res.locals.user = user;
+              res.render("_pages/login/findidpwd/id/findid", {
+                previousPath,
+                page: "signup",
+                title: "Signup",
+              });
               next();
             } else {
               return res.send(`
                 <script>
                     alert("회원이 존재하지 않습니다.");
-                    window.location.href="/findidpassword";
+                    window.history.back();
                 </script>`);
             }
             // 사용자가 존재하지 않더라도 next() 호출
@@ -91,15 +63,10 @@ module.exports = {
       }
     }
   },
-  findidView: (req, res) => {
-    res.render("_pages/findid", {
-      page: "findidv",
-      title: "Findid",
-    });
-  },
 
 
   findpwd: (req, res, next) => {
+    const previousPath = req.body.previousPath;
     let email = req.body.email;
     let id = req.body.id;
     // 폼 파라미터로 사용자 조회
@@ -115,7 +82,7 @@ module.exports = {
         return res.send(`
           <script>
               alert("ID와 이메일을 입력하세요.");
-              window.location.href="/findidpassword";
+              window.history.back();
           </script>`);
       } else {
         User.findOne({ email: email, id: id })
@@ -124,15 +91,16 @@ module.exports = {
               console.log(user.email);
               console.log(user.id);
               res.locals.user = user;
-              res.render("_pages/findpwd", {
-                page: "findpwd",
-                title: "Findpwd",
+              res.render("_pages/login/findidpwd/pwd/findpwd", {
+                previousPath,
+                page: "signup",
+                title: "Signup",
               });
             } else {
               return res.send(`
                 <script>
                     alert("회원이 존재하지 않습니다.");
-                    window.location.href="/findidpassword";
+                    window.history.back();
                 </script>`);
             }
           })
@@ -144,13 +112,10 @@ module.exports = {
     }
   },
 
-  findpwdView: (req, res, next) => {
-    next(); // 뷰 렌더링을 위해 next() 호출하지 않음
-  },
 
-  // 여기 오류
   updatepwd: (req, res, next) => {
     let userParams = getUserParams(req.body);
+    const previousPath = req.body.previousPath;
 
     console.log(userParams);
 
@@ -183,9 +148,10 @@ module.exports = {
                     } else {
                       // 업데이트 성공한 경우
                       res.locals.user = userParams;
-                      res.render("_pages/sspwd", {
-                        page: "sspwd",
-                        title: "sspwd",
+                      res.render("_pages/login/findidpwd/pwd/sspwd", {
+                        previousPath,
+                        page: "signup",
+                        title: "Signup",
                       });
                     }
                   })
@@ -210,13 +176,15 @@ module.exports = {
 
   create: (req, res, next) => {
     let userParams = getUserParams(req.body);
+    const previousPath = req.body.previousPath;
     // 폼 파라미터로 사용자 생성
     User.create(userParams)
       .then((user) => {
         res.locals.user = user;
-        res.render("_pages/success_signup", {
-          page: "success",
-          title: "Success",
+        res.render("_pages/login/signup/success_signup", {
+          previousPath,
+          page: "signup",
+          title: "Signup",
         });
       })
       .catch((error) => {
@@ -224,7 +192,7 @@ module.exports = {
           return res.send(`
             <script>
                 alert("이미 존재하는 ID 입니다.");
-                window.location.href="/signup";
+                window.history.back();
             </script>`);
         } else {
           console.log(`Error saving user: ${error.message}`);
@@ -238,33 +206,44 @@ module.exports = {
   login: (req, res, next) => {
     const id = req.body.id;
     const password = req.body.password;
-    if (req.session.isLoggedIn == true) {
+    const referer = req.body.previousPath;
+    if (req.session.isLoggedIn === true) {
       return res.send(`
       <script>
-          alert("이미 로그인이 되었습니다.");
+          alert("이미 로그인되었습니다.");
           window.location.href="/";
       </script>`);
-    } else if (id == "") {
-      return res.send('<script>alert("똑바로 입력하세요."); window.location.href="/login";</script>');
+    } else if (id === "") {
+      return res.send('<script>alert("똑바로 입력하세요."); window.history.back();</script>');
     } else {
-      // 아이디로 사용자를 찾습니다.
       User.findOne({ id: id })
         .then(user => {
           if (!user) {
-            return res.send('<script>alert("존재하지 않는 ID입니다.."); window.location.href="/login";</script>');
+            return res.send('<script>alert("존재하지 않는 ID입니다."); window.history.back();</script>');
           } else {
-            if (!bcrypt.compare(user.password, password)) {
-              return res.send('<script>alert("비밀번호가 일치하지 않습니다."); window.location.href="/login";</script>');
-            } else {
-              req.session.isLoggedIn = true;
-              req.session.user = user;
-              req.session.save(err => {
-                if (err) {
-                  console.log(err);
-                }
-                return res.redirect('/');
-              });
-            }
+            bcrypt.compare(password, user.password, (err, result) => {
+              if (err) {
+                console.log(err);
+                return res.send('<script>alert("비밀번호 확인 중 오류가 발생했습니다."); window.history.back();</script>');
+              }
+              if (result === false) {
+                return res.send('<script>alert("비밀번호가 일치하지 않습니다."); window.history.back();</script>');
+              } else {
+                req.session.isLoggedIn = true;
+                req.session.user = user;
+                req.session.save(err => {
+                  if (err) {
+                    console.log(err);
+                    console.log(referer);
+                  } if (referer == "Home") {
+                    return res.redirect("/");
+                  } else {
+                    return res.redirect("/" + referer);
+                  }
+
+                });
+              }
+            });
           }
         })
         .catch(err => console.log(err));
@@ -272,25 +251,22 @@ module.exports = {
   },
 
   logout: (req, res, next) => {
+    const referer = req.body.previousPath;
     req.session.destroy(err => {
       if (err) {
         console.log(err);
       }
-      res.redirect('/');
+      if (referer == "Home") {
+        res.redirect("/");
+      } else {
+        res.redirect("/" + referer);
+      }
     });
   },
 
-  relogin: (req, res, next) => {
-    req.session.destroy(err => {
-      if (err) {
-        console.log(err);
-      }
-      res.redirect('/login');
-    });
-  },
 
   UpdateUsers: (req, res, next) => {
-    const devicePixelRatio = parseInt(req.query.pixelWidth) || 0;
+    const previousPath = req.body.previousPath;
     const isLoggedIn = req.session.isLoggedIn;
 
     if (isLoggedIn) {
@@ -301,22 +277,20 @@ module.exports = {
         return res.send(`
       <script>
           alert("지금 사용중인 비밀번호입니다.");
-          window.location.href="/updateusers";
+          window.history.back()";
       </script>`);
       } else {
         bcrypt.hash(userParams.password, 10)
           .then(hash => {
             userParams.password = hash;
-            User.updateOne({
-              $set: userParams
-            })
+            User.updateOne({ id: username }, { password: userParams.password })
               .then((user) => {
-                return res.render("_pages/success_updateuser", {
+                return res.render("_pages/user_info/success_updateuser", {
                   isLoggedIn,
                   username,
-                  pixelWidth: devicePixelRatio,
-                  page: "success_updateuser",
-                  title: "Success_updateuser",
+                  previousPath,
+                  page: "login",
+                  title: "Login",
                 });
               })
               .catch((error) => {
@@ -334,7 +308,7 @@ module.exports = {
       return res.send(`
       <script>
           alert("로그인을 하십시오");
-          window.location.href="/login";
+          window.location.href="/";
       </script>`);
     }
   },

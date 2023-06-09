@@ -1,13 +1,13 @@
 <!-- layout.ejs -->
 <!DOCTYPE html>
-<html lang="en">
 
 <head>
   <meta charset="UTF-8" />
 
   <!-- @TODO: -->
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Final Project | <%= title %>
+  <meta charset="utf-8">
+  <title>Hit Game
   </title>
   <!-- @TODO: title태그를 완성하십시오 -->
 
@@ -29,24 +29,29 @@
     <link rel="stylesheet" media="(min-width: 1900px)" href="/css/style.1900.css" />
     <script src="js/index.js"></script>
     <script defer src="js/index2.js"></script>
-    <% } else if (title=='Login' || 'Signup' ) { %>
+    <% } else if (title=='Login' || title=='Signup' ) { %>
       <link rel="stylesheet" media="(min-width: 340px)" href="/css/signup.340.css" />
       <link rel="stylesheet" media="(min-width: 690px)" href="/css/signup.690.css" />
       <link rel="stylesheet" media="(min-width: 1024px)" href="/css/signup.1024.css" />
-      <% } %>
+      <% } else if(title!='Login' || title!='Signup' ||title!='Home' ){%>
+        <link rel="stylesheet" media="(min-width: 340px)" href="/css/gm_gal_340.css" />
+        <link rel="stylesheet" media="(min-width: 690px)" href="/css/gm_gal_690.css" />
+        <link rel="stylesheet" media="(min-width: 1400px)" href="/css/gm_gal_1400.css" />
+        <link rel="stylesheet" media="(min-width: 1900px)" href="/css/gm_gal_1900.css" />
+        <%}%>
 
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 
+
 <body>
-  <% if (title=='Home' ) { %>
-    <%- include('_partials/_header') %>
-      <% }else{ %>
+  <% var validTitles=['Home', 'LOZBOTW' , 'LOZSS' , 'supermario' , 'ACV' , 'BF2' , 'CODMW2' , 'diablo4' , 'fifa23'
+    , 'GOW' , 'LOL' , 'overwatch' , 'PLA' , 'tekken7' , 'valorant' ]; %>
+    <% if (validTitles.includes(title)) { %>
+      <%- include('_partials/_header') %>
         <% } %>
           <%- body %>
-            <!-- <%- include('_partials/_footer') %> -->
-
 </body>
 
 <!--

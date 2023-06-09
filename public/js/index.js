@@ -1,5 +1,6 @@
 var imageURLs = ["img/LOZBOTW.png", "img/supermario.png", "img/LOZSS.png"];
 var videoURLs = ["video/LOZBOTW.mp4", "video/supermario.mp4", "video/LOZSS.mp4"];
+var gmaeURLs = ["LOZBOTW", "supermario", "LOZSS"];
 
 var gmname = new Array();
 gmname[0] = "젤다의 전설 : 브레스 오브 더 와일드";
@@ -100,7 +101,9 @@ function gm_prolog() {
 	gm += 'px; margin-top: ';
 	gm += deviceHeight * 0.6;
 	gm += 'px; \">';
-	gm += '<a href="https://www.naver.com">';
+	gm += '<a href=\"/';
+	gm += gmaeURLs[randomIndex];
+	gm += '\">';
 	gm += getImageTag();
 	gm += '</a>';
 	gm += '</div>';

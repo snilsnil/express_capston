@@ -4,31 +4,47 @@
             <div id="nav">
                 <table id="mainmenu">
                     <tr>
-                        <td style="width:120px; cursor:pointer;" onclick="location.reload(true);">
-                            <img style="width:120px; box-shadow:none;" src="img/logo.png" alt="logo">
+                        <td style="width:120px; cursor:pointer;" onclick="location.href='/';">
+                            <img style="width:120px; box-shadow:none;" src="/img/logo.png" alt="logo">
                         </td>
                     </tr>
                 </table>
-                <% if (isLoggedIn) { %>
-                    <input id="login" type="button" value="로그아웃" onclick="location.href='logout'">
-                    <input id="successlogin" type="button" value="<%= username %>" onclick="location.href='updateuser'">
+                <table>
+                    <tr>
+                        <% if (isLoggedIn) { %>
+                            <form action="/logout" method="post">
+                                <input name="previousPath" type="hidden" value="<%= title %>">
+                                <input id="login" type="submit" value="로그아웃">
+                            </form>
+                            <form action="/updateuser" method="post">
+                                <input name="previousPath" type="hidden" value="<%= title %>">
+                                <input id="successlogin" type="submit" value="<%= username %>">
+                            </form>
 
-                    <% } else { %>
-                        <input id="login" type="button" value="로그인" onclick="location.href='login'">
-                        <% } %>
+                            <% } else { %>
+                                <form method="post" action="/login">
+                                    <input type="hidden" name="previousPath" value="<%= title %>">
+                                    <input id="login" type="submit" value="로그인">
+                                </form>
+                                <% } %>
+                    </tr>
+                </table>
             </div>
-            <div id="article">
-                <div id="contents">
-                    <script>
-                        // 수정한 부분
-                        var chatWindowWidth = window.innerWidth;
-                        if (chatWindowWidth > 1023) {
-                            document.write(gm_prolog());
-                        }
-                    </script>
+            <% if (title=='Home' ) { %>
+                <div id="article">
+                    <div id="contents">
+                        <script>
+                            // 수정한 부분
+                            var chatWindowWidth = window.innerWidth;
+                            if (chatWindowWidth > 1023) {
+                                document.write(gm_prolog());
+                            }
+                        </script>
+                    </div>
                 </div>
-            </div>
-            <!-- 여기까지 동영상 배경 -->
+                <!-- 여기까지 동영상 배경 -->
+                <%}else{%>
+                    <%}%>
         </div>
     </h1>
 </nav>

@@ -1,6 +1,8 @@
 // app.js
 "use strict";
 
+const communityController = require("./controllers/communityController");
+
 /**
  * =====================================================================
  * Define Express app and set it up
@@ -14,6 +16,7 @@ const express = require("express"), // express를 요청
 
 // controllers 폴더의 파일을 요청
 const pagesController = require("./controllers/pagesController"),
+  pagesController2 = require("./controllers/pagesController2"),
   usersController = require("./controllers/usersController"),
   errorController = require("./controllers/errorController"),
   cookieParser = require("cookie-parser"),
@@ -65,33 +68,15 @@ app.use(cookieParser("secret_passcode"));
 app.use(expressSession({
   secret: "secret_passcode",
   cookie: {
-    maxAge: 900000
+    maxAge: 86400000
   },
   resave: false,
   saveUninitialized: false
 }));
 app.use(connectFlash());
 
-app.use(passport.initialize());
-app.use(passport.session());
 
-// 로컬 전략(LocalStrategy)을 정의하여 사용자 이름/비밀번호 인증을 처리합니다.
-passport.use(new LocalStrategy(
-  function (username, password, done) {
-    // 여기에서 인증 로직을 구현합니다.
-    // 제공된 사용자 이름과 비밀번호를 확인하고, 적절한 결과로 done()을 호출합니다.
-  }
-));
 
-// 세션 관리를 위해 사용자 객체를 직렬화(serialize)하고 역직렬화(deserialize)합니다.
-passport.serializeUser(function (user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function (id, done) {
-  // 제공된 id를 사용하여 데이터베이스에서 사용자 객체를 가져옵니다.
-  // 사용자 객체를 done()으로 전달합니다.
-});
 
 /**
  * =====================================================================
@@ -109,23 +94,98 @@ app.use("/", router); // 라우터를 애플리케이션에 추가
 
 router.get("/", pagesController.showHome); // 홈 메인 화면
 
-router.get("/login", pagesController.showLogin); // 로그인 화면
+router.post("/login", pagesController.showLogin); // 로그인 화면
 router.post("/loginProcess", usersController.login); //로그인 기능 라우터
-router.get("/logout", usersController.logout); //로그아웃 라우터
+router.post("/logout", usersController.logout); //로그아웃 라우터
 
-router.get("/updateuser", pagesController.showUser); //회원 정보 홈페이지
-router.get("/updateusers", pagesController.showUsers);  //회원 정보 수정 홈페이지
+router.post("/updateuser", pagesController.showUser); //회원 정보 홈페이지
+router.post("/updateusers", pagesController.showUsers);  //회원 정보 수정 홈페이지
 router.post("/success_updateuser", usersController.UpdateUsers); //회원정보 수정 완료 홈페이지
-router.get("/relogin", usersController.relogin); // 회원정보 수정 후 로그아웃위한 화면
 
 
-router.get("/findidpassword", pagesController.showFindpassword); // ID 또는 비밀번호 찾기 홈페이지
-router.post("/findid", usersController.findid, usersController.findidView); // ID 찾은 홈페이지
-router.post("/findpwd", usersController.findpwd, usersController.findpwdView); // 비밀번호 수정을 위한 홈페이지
+router.post("/findidpassword", pagesController.showFindpassword); // ID 또는 비밀번호 찾기 홈페이지
+router.post("/findid", usersController.findid); // ID 찾은 홈페이지
+router.post("/findpwd", usersController.findpwd); // 비밀번호 수정을 위한 홈페이지
 router.post("/sspwd", usersController.updatepwd); // 비밀번호 수정 기능 라우터
 
-router.get("/signup", pagesController.showSignup); //회원가입 홈페이지
+router.post("/signup", pagesController.showSignup); //회원가입 홈페이지
 router.post("/success_signup", usersController.create); // 회원가입 기능 라우터
+
+
+/**
+ * =====================================================================
+ * game community site
+ * =====================================================================
+ */
+
+
+router.get("/LOZBOTW", pagesController.showLOZBOTW);
+router.post("/LOZBOTW/modified_:textNum", pagesController.showModified);
+router.post("/LOZBOTW/view_:textNum", pagesController.showView);
+
+router.get("/LOZSS", pagesController.showLOZSS);
+router.post("/LOZSS/modified_:textNum", pagesController.showModified);
+router.post("/LOZSS/view_:textNum", pagesController.showView);
+
+router.get("/supermario", pagesController.showSupermario);
+router.post("/supermario/modified_:textNum", pagesController.showModified);
+router.post("/supermario/view_:textNum", pagesController.showView);
+
+router.get("/ACV", pagesController.showACV);
+router.post("/ACV/modified_:textNum", pagesController.showModified);
+router.post("/ACV/view_:textNum", pagesController.showView);
+
+router.get("/BF2", pagesController.showBF2);
+router.post("/BF2/modified_:textNum", pagesController.showModified);
+router.post("/BF2/view_:textNum", pagesController.showView);
+
+router.get("/CODMW2", pagesController.showCODMW2);
+router.post("/CODMW2/modified_:textNum", pagesController.showModified);
+router.post("/CODMW2/view_:textNum", pagesController.showView);
+
+router.get("/diablo4", pagesController.showDiablo4);
+router.post("/diablo4/modified_:textNum", pagesController.showModified);
+router.post("/diablo4/view_:textNum", pagesController.showView);
+
+router.get("/fifa23", pagesController2.showFifa23);
+router.post("/fifa23/modified_:textNum", pagesController.showModified);
+router.post("/fifa23/view_:textNum", pagesController.showView);
+
+router.get("/GOW", pagesController2.showGOW);
+router.post("/GOW/modified_:textNum", pagesController.showModified);
+router.post("/GOW/view_:textNum", pagesController.showView);
+
+router.get("/LOL", pagesController2.showLOL);
+router.post("/LOL/modified_:textNum", pagesController.showModified);
+router.post("/LOL/view_:textNum", pagesController.showView);
+
+router.get("/overwatch", pagesController2.showOverwatch);
+router.post("/overwatch/modified_:textNum", pagesController.showModified);
+router.post("/overwatch/view_:textNum", pagesController.showView);
+
+router.get("/PLA", pagesController2.showPLA);
+router.post("/PLA/modified_:textNum", pagesController.showModified);
+router.post("/PLA/view_:textNum", pagesController.showView);
+
+router.get("/tekken7", pagesController2.showTekken7);
+router.post("/tekken7/modified_:textNum", pagesController.showModified);
+router.post("/tekken7/view_:textNum", pagesController.showView);
+
+router.get("/valorant", pagesController2.showValorant);
+router.post("/valorant/modified_:textNum", pagesController.showModified);
+router.post("/valorant/view_:textNum", pagesController.showView);
+
+
+
+
+
+router.post("/write", pagesController.showWrite);
+router.post("/writeAction", communityController.create);
+router.post("/modifiedAction", communityController.modified);
+router.post("/deleteAction", communityController.delete);
+
+
+
 
 /**
  * =====================================================================
