@@ -1,11 +1,14 @@
 {
+  "homepage": "https://snilsnil.github.io/express_capston/",
   "name": "express-capston",
   "version": "1.0.0",
   "description": "A website using Express",
   "main": "app.js",
   "scripts": {
     "test": "jest",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "author": "Heo Junyeong",
   "license": "ISC",
@@ -27,6 +30,7 @@
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
+    "gh-pages": "^6.1.1",
     "nodemon": "^2.0.21"
   }
 }
